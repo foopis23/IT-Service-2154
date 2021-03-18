@@ -191,16 +191,16 @@ public class Player : MonoBehaviour
     void OnGroundPound(GroundPoundContext ctx)
     {
         //distance not including y
-        Vector3 from = new Vector3(ctx.location.x, 0, ctx.location.z);
+        Vector3 from = new Vector3(ctx.Location.x, 0, ctx.Location.z);
         Vector3 current = new Vector3(transform.position.x, 0, transform.position.z);
         float distance = Vector3.Distance(from, current);
 
-        if (distance <= ctx.radius)
+        if (distance <= ctx.Radius)
         {
-            float damage = ctx.damage;
-            if (ctx.linearFalloff)
+            float damage = ctx.Damage;
+            if (ctx.LinearFalloff)
             {
-                damage *= (distance / ctx.radius);
+                damage *= (distance / ctx.Radius);
             }
 
             TakeDamage(damage);

@@ -1,22 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using CallbackEvents;
 
 public class GroundPoundContext : EventContext
 {
-    public Vector3 location;
-    public float radius;
-    public float damage;
-    public bool linearFalloff;
+    public Vector3 Location;
+    public readonly float Radius;
+    public readonly float Damage;
+    public readonly bool LinearFalloff;
 
     public GroundPoundContext(Vector3 location, float radius, float damage, bool linearFalloff)
     {
-        this.location = location;
-        this.radius = radius;
-        this.damage = damage;
-        this.linearFalloff = linearFalloff;
+        Location = location;
+        Radius = radius;
+        Damage = damage;
+        LinearFalloff = linearFalloff;
     }
 }
 
@@ -27,13 +25,6 @@ public class ZombieAI : MonoBehaviour
     public Animator animator;
 
     //navigation settings
-    public Transform target;
-    public float viewDistance; //view distance for spotting player
-    public float agroViewDistance; //view distance after agro'd
-    public float viewConeAngle; //view cone angle for spotting player
-    public float agroViewConeAngle; //view cone angle when player is spoitted
-    public int lookForLostPlayerMs; //the amount of time the bot should look for a lost player
-    public float timeBetweenSeePlayerChecks; //increaments to check on whether or not we can see the player
     public float rotationDamping; //controls ai rotation speed
 
     //attack settings
@@ -49,139 +40,45 @@ public class ZombieAI : MonoBehaviour
     public Material hurtMaterial; //material to apply on damaged
     public Material normalMaterial; //material to restore normal colors
 
-    //health settings
-    public float maxHealth;
-
     //audio sources for each sound effect
-    public AudioSource zombieAttackPrep1;
-    public AudioSource zombieAttackPrep2;
-    public AudioSource zombieAttackSmash;
-
-    //Navagiation Properties
-    private float lastSawPlayerTime;
-    private Vector3 lastSeenPlayerPos;
-    private float lastPlayerSeenCheck;
-
-    //health settings
-    private float health;
 
     //the speed the ai is suppose to move at (pulled from the navagent comp)
-    private float normalSpeed;
+    private float _normalSpeed;
 
     //state flags
-    private bool isAgro;
-    private bool hasLastPlayerPos;
-    private bool didSeePlayer;
-    private bool canSeePlayer;
-    private bool isAttacking;
-    private bool isAttackCoolingDown;
+    private bool _isAgro;
+    private bool _isAttacking;
+    private bool _isAttackCoolingDown;
+    private static readonly int IsAgro = Animator.StringToHash("isAgro");
+    private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
+    
+    // Interfaces
+    private IVision _vision;
+    private IHealth _health;
+    private ISfxController _sfxController;
 
-    /*
-    ....###....####....####.##....##.########.########.##....##.########..######.
-    ...##.##....##......##..###...##....##....##.......###...##....##....##....##
-    ..##...##...##......##..####..##....##....##.......####..##....##....##......
-    .##.....##..##......##..##.##.##....##....######...##.##.##....##.....######.
-    .#########..##......##..##..####....##....##.......##..####....##..........##
-    .##.....##..##......##..##...###....##....##.......##...###....##....##....##
-    .##.....##.####....####.##....##....##....########.##....##....##.....######.
-    */
-
-    void AttackPlayer()
-    {
-        lastSeenPlayerPos = target.position;
-        lastSawPlayerTime = Time.time;
-        hasLastPlayerPos = true;
-        navMeshAgent.SetDestination(target.position);
-
-        Vector3 lookPos = target.position - transform.position;
-        lookPos.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
-        // transform.LookAt(target.position, Vector3.up);
-    }
-
-    void FollowPlayer()
-    {
-        lastSeenPlayerPos = target.position;
-        lastSawPlayerTime = Time.time;
-        hasLastPlayerPos = true;
-        navMeshAgent.SetDestination(target.position);
-
-        //check if player is close enough to attack
-        if (Vector3.Distance(transform.position, target.transform.position) <= attackDistance && !isAttackCoolingDown)
-        {
-            isAttacking = true;
-        }
-
-        Vector3 lookPos = target.position - transform.position;
-        lookPos.y = 0;
-        Quaternion rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
-        // transform.LookAt(target.position, Vector3.up);
-    }
-
-    void LookForPlayer()
-    {
-        if (hasLastPlayerPos)
-        {
-            navMeshAgent.SetDestination(lastSeenPlayerPos);
-        }
-        else
-        {
-            navMeshAgent.SetDestination(transform.position);
-        }
-
-        if (Time.time - lastSawPlayerTime >= lookForLostPlayerMs)
-        {
-            isAgro = false;
-            hasLastPlayerPos = false;
-        }
-    }
-
-    void Wander()
-    {
-        navMeshAgent.SetDestination(transform.position);
-        //TODO: wander around
-        hasLastPlayerPos = false;
-        isAgro = canSeePlayer;
-    }
-
-    /*
-    .##.....##.########..######...######.....###.....######...########..######.
-    .###...###.##.......##....##.##....##...##.##...##....##..##.......##....##
-    .####.####.##.......##.......##........##...##..##........##.......##......
-    .##.###.##.######....######...######..##.....##.##...####.######....######.
-    .##.....##.##.............##.......##.#########.##....##..##.............##
-    .##.....##.##.......##....##.##....##.##.....##.##....##..##.......##....##
-    .##.....##.########..######...######..##.....##..######...########..######.
-    */
-
-    void Start()
+    private void Start()
     {
         //get nav mesh agent
         if (navMeshAgent == null)
             navMeshAgent = GetComponent<NavMeshAgent>();
 
-        //get player target
-        if (target == null)
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-
         //get the animator
         if (animator == null)
             animator = GetComponent<Animator>();
 
+        //get interfaces
+        _vision = GetComponent<IVision>();
+        _health = GetComponent<IHealth>();
+        _sfxController = GetComponent<ISfxController>();
+
         //intial properties
-        lastSeenPlayerPos = new Vector3();
-        normalSpeed = navMeshAgent.speed;
-        health = maxHealth;
+        _normalSpeed = navMeshAgent.speed;
 
         //intial
-        isAgro = false;
-        hasLastPlayerPos = false;
-        canSeePlayer = false;
-        didSeePlayer = false;
-        isAttacking = false;
-        isAttackCoolingDown = false;
+        _isAgro = false;
+        _isAttacking = false;
+        _isAttackCoolingDown = false;
         navMeshAgent.updateRotation = false;
         invisible = false;
 
@@ -189,79 +86,72 @@ public class ZombieAI : MonoBehaviour
         EventSystem.Current.RegisterEventListener<BulletHitCtx>(OnBulletHit);
     }
 
-    void AgroUpdate()
+    private void Update()
     {
-        if (canSeePlayer)
-        {
-            if (!isAttacking)
+        //set animation states
+        animator.SetBool(IsAttacking, _isAttacking);
+        animator.SetBool(IsAgro, _isAgro);
+
+        if (_isAgro) {
+            if (_vision.CanSeeObject())
             {
-                FollowPlayer();
+                if (!_isAttacking)
+                {
+                    // Follow Player
+                    var position = _vision.GetVisibleObjects()[0].transform.position;
+                    navMeshAgent.SetDestination(position);
+
+                    //check if player is close enough to attack
+                    if (Vector3.Distance(transform.position, position) <= attackDistance && !_isAttackCoolingDown)
+                    {
+                        _isAttacking = true;
+                    }
+
+                    var lookPos = position - transform.position;
+                    lookPos.y = 0;
+                    var rotation = Quaternion.LookRotation(lookPos);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
+                }
+                else
+                {
+                    // Attack Player
+                    var position = _vision.GetVisibleObjects()[0].transform.position;
+                    navMeshAgent.SetDestination(position);
+
+                    var lookPos = position - transform.position;
+                    lookPos.y = 0;
+                    var rotation = Quaternion.LookRotation(lookPos);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
+                }
             }
             else
             {
-                AttackPlayer();
+                //TODO: I don't fucking know
             }
         }
         else
         {
-            FollowPlayer();
+            // Wander
+            navMeshAgent.SetDestination(transform.position);
+            //TODO: wander around
+            _isAgro = _vision.CanSeeObject();
         }
     }
-
-    void IdleUpdate()
-    {
-        Wander();
-    }
-
-    void Update()
-    {
-        //set animation states
-        animator.SetBool("isAttacking", isAttacking);
-        animator.SetBool("isAgro", isAgro);
-
-        if (isAgro)
-        {
-            AgroUpdate();
-        }
-        else
-        {
-            IdleUpdate();
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (Time.time - lastPlayerSeenCheck > timeBetweenSeePlayerChecks)
-        {
-            didSeePlayer = canSeePlayer;
-            canSeePlayer = DoesAISeePlayer();
-        }
-    }
-
-    /*
-    .########.##.....##.########.##....##.########..######.
-    .##.......##.....##.##.......###...##....##....##....##
-    .##.......##.....##.##.......####..##....##....##......
-    .######...##.....##.######...##.##.##....##.....######.
-    .##........##...##..##.......##..####....##..........##
-    .##.........##.##...##.......##...###....##....##....##
-    .########....###....########.##....##....##.....######.
-    */
 
     public void OnAttackCooldownFinished()
     {
-        isAttackCoolingDown = false;
+        _isAttackCoolingDown = false;
     }
 
-    public void OnDamgeFinshed()
+    private void OnDamgeFinshed()
     {
         invisible = false;
-        foreach (MeshRenderer mesh in hurtMesh)
+        foreach (var mesh in hurtMesh)
         {
             mesh.material = normalMaterial;
         }
 
-        if (health <= 0)
+        if (_health.GetHealth() <= 0)
         {
             gameObject.SetActive(false);
         }
@@ -270,29 +160,30 @@ public class ZombieAI : MonoBehaviour
     public void OnPrepAttack1()
     {
         navMeshAgent.speed = attackChargeSpeed;
-        zombieAttackPrep1.Play();
+        _sfxController.PlayEffect("zombieAttackPrep1");
     }
 
     public void OnPrepAttack2()
     {
-        zombieAttackPrep2.Play();
+        _sfxController.PlayEffect("zombieAttackPrep2");
     }
 
     public void OnAttack()
     {
         navMeshAgent.speed = 0;
-        zombieAttackSmash.Play();
-        EventSystem.Current.FireEvent(new GroundPoundContext(new Vector3(transform.position.x, transform.position.y, transform.position.z), groundPoundRadius, groundPoundDamage, groundPoundLinearFalloff));
+        _sfxController.PlayEffect("zombieAttackSmash");
+        var position = transform.position;
+        EventSystem.Current.FireEvent(new GroundPoundContext(new Vector3(position.x, position.y, position.z), groundPoundRadius, groundPoundDamage, groundPoundLinearFalloff));
     }
 
     public void OnAttackFinished()
     {
-        navMeshAgent.speed = normalSpeed;
-        isAttacking = false;
-        isAttackCoolingDown = true;
+        navMeshAgent.speed = _normalSpeed;
+        _isAttacking = false;
+        _isAttackCoolingDown = true;
     }
 
-    public void OnBulletHit(BulletHitCtx ctx)
+    private void OnBulletHit(BulletHitCtx ctx)
     {
         if (gameObject.Equals(ctx.hit.collider.gameObject))
         {
@@ -300,38 +191,12 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    /*
-    .##.....##.########.##.......########..########.########...######.
-    .##.....##.##.......##.......##.....##.##.......##.....##.##....##
-    .##.....##.##.......##.......##.....##.##.......##.....##.##......
-    .#########.######...##.......########..######...########...######.
-    .##.....##.##.......##.......##........##.......##...##.........##
-    .##.....##.##.......##.......##........##.......##....##..##....##
-    .##.....##.########.########.##........########.##.....##..######.
-    */
-
-    private bool DoesAISeePlayer()
-    {
-        Vector3 direction = (target.position - transform.position).normalized;
-        RaycastHit hit;
-
-        float angle = (isAgro) ? agroViewConeAngle : viewConeAngle;
-        float distance = (isAgro) ? agroViewDistance : viewDistance;
-
-        lastPlayerSeenCheck = Time.time;
-
-        return Mathf.Abs(Vector3.Angle(transform.position, target.position)) <= (angle / 2) &&
-            Vector3.Distance(transform.position, target.position) <= distance &&
-            Physics.Raycast(transform.position, direction, out hit) &&
-            hit.collider.gameObject.tag == "Player" && !hit.collider.gameObject.GetComponent<Player>().Invisible;
-    }
-
     private void TakeDamage(float damage)
     {
         if (!invisible)
         {
             invisible = false;
-            health -= damage;
+            _health.ApplyDamage(damage);
             foreach (MeshRenderer mesh in hurtMesh)
             {
                 mesh.material = hurtMaterial;
