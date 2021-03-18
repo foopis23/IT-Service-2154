@@ -40,8 +40,6 @@ public class ZombieAI : MonoBehaviour
     public Material hurtMaterial; //material to apply on damaged
     public Material normalMaterial; //material to restore normal colors
 
-    //audio sources for each sound effect
-
     //the speed the ai is suppose to move at (pulled from the navagent comp)
     private float _normalSpeed;
 
