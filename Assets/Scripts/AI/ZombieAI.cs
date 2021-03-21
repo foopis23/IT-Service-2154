@@ -141,7 +141,7 @@ public class ZombieAI : MonoBehaviour
         _isAttackCoolingDown = false;
     }
 
-    private void OnDamgeFinshed()
+    private void OnDamageFinished()
     {
         invisible = false;
         foreach (var mesh in hurtMesh)
@@ -201,6 +201,6 @@ public class ZombieAI : MonoBehaviour
             }
         }
 
-        EventSystem.Current.CallbackAfter(OnDamgeFinshed, 400);
+        EventSystem.Current.CallbackAfter(OnDamageFinished, 400);
     }
 }
