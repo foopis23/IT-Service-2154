@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
+﻿using System;
+using UnityEngine;
 using CallbackEvents;
 
 public class GroundPoundContext : EventContext
@@ -21,11 +21,7 @@ public class GroundPoundContext : EventContext
 public class ZombieAI : MonoBehaviour
 {
     //components
-    public NavMeshAgent navMeshAgent;
     public Animator animator;
-
-    //navigation settings
-    public float rotationDamping; //controls ai rotation speed
 
     //attack settings
     public float attackDistance; //distance the player can attack from
@@ -36,11 +32,11 @@ public class ZombieAI : MonoBehaviour
     public float attackChargeSpeed = 6.0f;
 
     //damage settings
-    public MeshRenderer[] hurtMesh; //meshs to apply the hurt material to on damaged
+    public MeshRenderer[] hurtMesh; //meshes to apply the hurt material to on damaged
     public Material hurtMaterial; //material to apply on damaged
     public Material normalMaterial; //material to restore normal colors
 
-    //the speed the ai is suppose to move at (pulled from the navagent comp)
+    //the speed the ai is suppose to move at (pulled from the navigate comp)
     private float _normalSpeed;
 
     //state flags
@@ -50,34 +46,34 @@ public class ZombieAI : MonoBehaviour
     private static readonly int IsAgro = Animator.StringToHash("isAgro");
     private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
     
-    // Interfaces
+    // Responsibility Interfaces
     private IVision _vision;
     private IHealth _health;
     private ISfxController _sfxController;
+    private IPathFinding _pathFinding;
+    private IMovement _movement;
+    private IRotation _rotation;
 
     private void Start()
     {
-        //get nav mesh agent
-        if (navMeshAgent == null)
-            navMeshAgent = GetComponent<NavMeshAgent>();
-
         //get the animator
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
         //get interfaces
         _vision = GetComponent<IVision>();
         _health = GetComponent<IHealth>();
         _sfxController = GetComponent<ISfxController>();
+        _pathFinding = GetComponent<IPathFinding>();
+        _movement = GetComponent<IMovement>();
+        _rotation = GetComponent<IRotation>();
 
-        //intial properties
-        _normalSpeed = navMeshAgent.speed;
+        //initial properties
+        _normalSpeed = _movement.GetSpeed();
 
-        //intial
+        //initial states
         _isAgro = false;
         _isAttacking = false;
         _isAttackCoolingDown = false;
-        navMeshAgent.updateRotation = false;
         invisible = false;
 
         //register event listener
@@ -90,47 +86,28 @@ public class ZombieAI : MonoBehaviour
         animator.SetBool(IsAttacking, _isAttacking);
         animator.SetBool(IsAgro, _isAgro);
 
-        if (_isAgro) {
-            if (_vision.CanSeeObject())
+        if (_isAgro)
+        {
+            if (!_vision.CanSeeObject()) return;
+            
+            // Move towards players
+            var position = _vision.GetVisibleObjects()[0].transform.position;
+            var path = _pathFinding.GetPath(position);
+            _movement.SetPath(path);
+                
+            // Look at player
+            _rotation.RotateTowards(position);
+
+            if (!_isAttacking && Vector3.Distance(transform.position, position) <= attackDistance &&
+                !_isAttackCoolingDown)
             {
-                if (!_isAttacking)
-                {
-                    // Follow Player
-                    var position = _vision.GetVisibleObjects()[0].transform.position;
-                    navMeshAgent.SetDestination(position);
-
-                    //check if player is close enough to attack
-                    if (Vector3.Distance(transform.position, position) <= attackDistance && !_isAttackCoolingDown)
-                    {
-                        _isAttacking = true;
-                    }
-
-                    var lookPos = position - transform.position;
-                    lookPos.y = 0;
-                    var rotation = Quaternion.LookRotation(lookPos);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
-                }
-                else
-                {
-                    // Attack Player
-                    var position = _vision.GetVisibleObjects()[0].transform.position;
-                    navMeshAgent.SetDestination(position);
-
-                    var lookPos = position - transform.position;
-                    lookPos.y = 0;
-                    var rotation = Quaternion.LookRotation(lookPos);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationDamping);
-                }
-            }
-            else
-            {
-                //TODO: I don't fucking know
+                _isAttacking = true;
             }
         }
         else
         {
             // Wander
-            navMeshAgent.SetDestination(transform.position);
+            _movement.SetPath(null);
             //TODO: wander around
             _isAgro = _vision.CanSeeObject();
         }
@@ -157,7 +134,7 @@ public class ZombieAI : MonoBehaviour
 
     public void OnPrepAttack1()
     {
-        navMeshAgent.speed = attackChargeSpeed;
+        _movement.SetSpeed(attackChargeSpeed);
         _sfxController.PlayEffect("zombieAttackPrep1");
     }
 
@@ -168,7 +145,7 @@ public class ZombieAI : MonoBehaviour
 
     public void OnAttack()
     {
-        navMeshAgent.speed = 0;
+        _movement.SetSpeed(0);
         _sfxController.PlayEffect("zombieAttackSmash");
         var position = transform.position;
         EventSystem.Current.FireEvent(new GroundPoundContext(new Vector3(position.x, position.y, position.z), groundPoundRadius, groundPoundDamage, groundPoundLinearFalloff));
@@ -176,7 +153,7 @@ public class ZombieAI : MonoBehaviour
 
     public void OnAttackFinished()
     {
-        navMeshAgent.speed = _normalSpeed;
+        _movement.SetSpeed(_normalSpeed);
         _isAttacking = false;
         _isAttackCoolingDown = true;
     }
