@@ -538,6 +538,9 @@ GameObject:
   - component: {fileID: 6227269617748104720}
   - component: {fileID: 8149389397004978008}
   - component: {fileID: -6334294485337272927}
+  - component: {fileID: -5793263488792140866}
+  - component: {fileID: 6306809314075021526}
+  - component: {fileID: -1538422837881394699}
   m_Layer: 0
   m_Name: Ball Crusher
   m_TagString: Untagged
@@ -594,7 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c18d9f8fd80a0e43b498fc383cc04b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: 7824608064262084804}
   animator: {fileID: 7824608064262084807}
   rotationDamping: 5
   attackDistance: 5
@@ -740,3 +742,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   startingHealth: 100
+--- !u!114 &-5793263488792140866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7824608064262084826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ab922ee8564269998d483a5449fcd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6306809314075021526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7824608064262084826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb9d7eccd884d5f8100827ef20a1806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1538422837881394699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7824608064262084826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67300c45ae5e42b289f0539d92f2c2c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationDamping: 5
