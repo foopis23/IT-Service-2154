@@ -598,19 +598,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7824608064262084807}
-  rotationDamping: 5
   attackDistance: 5
   groundPoundRadius: 6
   groundPoundDamage: 40
   groundPoundLinearFalloff: 0
   invisible: 0
   attackChargeSpeed: 6
-  hurtMesh:
-  - {fileID: 7824608064107078469}
-  - {fileID: 7824608063073233086}
-  - {fileID: 7824608062962407689}
-  hurtMaterial: {fileID: 2100000, guid: 9b8b03c7edffbcc4ba181b4741a2c388, type: 2}
-  normalMaterial: {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
+  damageIndicatorLength: 0.4
 --- !u!95 &7824608064262084807
 Animator:
   serializedVersion: 3
