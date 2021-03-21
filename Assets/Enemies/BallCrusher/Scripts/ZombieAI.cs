@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using CallbackEvents;
 
 public class GroundPoundContext : EventContext
@@ -25,7 +26,6 @@ public class ZombieAI : MonoBehaviour
     //Animator Tags
     private static readonly int IsAgro = Animator.StringToHash("isAgro");
     private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
-    private static readonly int IsTakingDamage = Animator.StringToHash("isTakingDamage");
 
     //attack settings
     public float attackDistance; //distance the player can attack from
@@ -36,8 +36,7 @@ public class ZombieAI : MonoBehaviour
     public float attackChargeSpeed = 6.0f;
     
     //damage setting
-    public float damageIndicatorLength = 0.4f;
-    private float _lastDamageTime = float.MinValue;
+
 
     //the speed the ai is suppose to move at (pulled from the navigate comp)
     private float _normalSpeed;
@@ -46,8 +45,7 @@ public class ZombieAI : MonoBehaviour
     private bool _isAgro;
     private bool _isAttacking;
     private bool _isAttackCoolingDown;
-    private bool _isTakingDamage;
-    
+
     // Responsibility Interfaces
     private IVision _vision;
     private IHealth _health;
@@ -55,6 +53,7 @@ public class ZombieAI : MonoBehaviour
     private IPathFinding _pathFinding;
     private IMovement _movement;
     private IRotation _rotation;
+    private IDamageDisplayManager _simpleDamageDisplayManager;
 
     private void Start()
     {
@@ -68,6 +67,7 @@ public class ZombieAI : MonoBehaviour
         _pathFinding = GetComponent<IPathFinding>();
         _movement = GetComponent<IMovement>();
         _rotation = GetComponent<IRotation>();
+        _simpleDamageDisplayManager = GetComponent<IDamageDisplayManager>();
 
         //initial properties
         _normalSpeed = _movement.GetSpeed();
@@ -76,7 +76,6 @@ public class ZombieAI : MonoBehaviour
         _isAgro = false;
         _isAttacking = false;
         _isAttackCoolingDown = false;
-        _isTakingDamage = false;
         invisible = false;
 
         //register event listener
@@ -88,7 +87,6 @@ public class ZombieAI : MonoBehaviour
         //set animation states
         animator.SetBool(IsAttacking, _isAttacking);
         animator.SetBool(IsAgro, _isAgro);
-        animator.SetBool(IsTakingDamage, (Time.time - _lastDamageTime) < damageIndicatorLength);
 
         if (_isAgro)
         {
@@ -115,19 +113,16 @@ public class ZombieAI : MonoBehaviour
             //TODO: wander around
             _isAgro = _vision.CanSeeObject();
         }
+        
+        if (_health.GetHealth() <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void OnAttackCooldownFinished()
     {
         _isAttackCoolingDown = false;
-    }
-
-    private void OnDamageFinished()
-    {
-        if (_health.GetHealth() <= 0)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     public void OnPrepAttack1()
@@ -171,9 +166,7 @@ public class ZombieAI : MonoBehaviour
             invisible = false;
             _health.ApplyDamage(damage);
         }
-
-        _lastDamageTime = Time.time;
-
-        EventSystem.Current.CallbackAfter(OnDamageFinished, 400);
+        
+        _simpleDamageDisplayManager.TakeDamage();
     }
 }
