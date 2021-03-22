@@ -666,9 +666,21 @@ PrefabInstance:
       propertyPath: tranparency
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4543459960021953385, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4543459960021953386, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 4596123302853886350, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: m_Name
       value: Spawn This Shit Everytime Bundle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7189640883608943352, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7895653947256588751, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: x
