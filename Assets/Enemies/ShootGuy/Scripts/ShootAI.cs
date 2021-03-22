@@ -266,12 +266,32 @@ public class ShootAI : MonoBehaviour
         _sfxController.PlayEffect("attackSound");
 
         var ob = Instantiate(projectilePrefab);
-        var transform1 = transform;
-        var forward = transform1.forward;
-        ob.transform.position = transform1.position + forward + (transform1.up * 1.35f);
+        var aiTransform = transform;
+        var aiPosition = aiTransform.position;
+        var spawnOffset = (aiTransform.up * 1.35f);
+
+        Vector3 targetPos;
+
+        if (_vision.CanSeeObject())
+        {
+            targetPos = _vision.GetVisibleObjects()[0].transform.transform.position;
+        }
+        else if (_hasLastPlayerPos)
+        {
+            targetPos = _lastSeenPlayerPos;
+        }
+        else
+        {
+            targetPos = (aiPosition + spawnOffset) + aiTransform.forward;
+        }
+
+        var forward = (targetPos - (aiPosition + spawnOffset)).normalized;
+        ob.transform.position = aiPosition + forward + spawnOffset;
+        
         var projectile = ob.GetComponent<Projectile>();
         projectile.velocity = forward * projectileSpeed;
         projectile.damage = projectileDamage;
+        
         _isAttackCoolingDown = true;
         _isAttacking = false;
     }

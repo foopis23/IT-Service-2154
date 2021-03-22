@@ -593,7 +593,7 @@ PrefabInstance:
     - target: {fileID: 434536067409991347, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: StartingGun
       value: 
-      objectReference: {fileID: 11400000, guid: f7a697521e4c6034c879d9dcdce0dcc2, type: 2}
+      objectReference: {fileID: 11400000, guid: 46750bd5d240c0a4595008d1383ed5ce, type: 2}
     - target: {fileID: 434536067409991347, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: fadeOverlay
       value: 
