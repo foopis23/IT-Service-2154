@@ -7121,7 +7121,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2517498728467157243}
-  m_RootOrder: 39
+  m_RootOrder: 38
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1227457175089147998
 GameObject:
@@ -9553,36 +9553,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1639623939529089952
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 425093165066452872}
-  m_Layer: 0
-  m_Name: TO4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &425093165066452872
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1639623939529089952}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 43, y: 67, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2517498728467157243}
-  m_RootOrder: 37
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1757954017980247768
 GameObject:
   m_ObjectHideFlags: 0
@@ -10142,7 +10112,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2517498728467157243}
-  m_RootOrder: 40
+  m_RootOrder: 39
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3384266045086387087
 GameObject:
@@ -11850,7 +11820,6 @@ Transform:
   - {fileID: 3929908496269024324}
   - {fileID: 5697431658665199705}
   - {fileID: 4545468852229966127}
-  - {fileID: 425093165066452872}
   - {fileID: 1187965068986475469}
   - {fileID: 7703271105935636890}
   - {fileID: 1466028788798928460}
@@ -11873,7 +11842,7 @@ MonoBehaviour:
   - {fileID: 5562847507429417066}
   - {fileID: 6823503805848051271}
   - {fileID: 597076514127501557}
-  - {fileID: 1639623939529089952}
+  - {fileID: 0}
   SpawnLocations:
   - {fileID: 5187665936706171144}
   - {fileID: 4607848133734666216}
@@ -11907,7 +11876,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2517498728467157243}
-  m_RootOrder: 38
+  m_RootOrder: 37
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4669336123959230655
 GameObject:
