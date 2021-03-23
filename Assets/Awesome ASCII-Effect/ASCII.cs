@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteInEditMode]
 public class ASCII : MonoBehaviour
@@ -181,6 +182,51 @@ public class ASCII : MonoBehaviour
 		setRegionDirty(x, y, width, height);
 	}
 
+	private void LegacyRenderRegion(int x, int y, int width, int height)
+	{
+		var regionX = charWidth * x;
+		var regionY = charHeight * y;
+		var regionWidth = charWidth * width;
+		var regionHeight = charHeight * height;
+
+		// clear current region 
+		for (var px=0; px < regionWidth; px++) {
+			for (var py=0; py < regionHeight; py++) {
+				overlayTexture.SetPixel(regionX + px, regionY + py, new Color(0, 0, 0, 0));
+			}
+		}
+
+		// loop through region array and generate region texture
+		for (var row = 0; row < height; row++)
+		{
+			for (var column = 0; column < width; column++)
+			{
+				// figure out what char we are trying to draw
+				Vector2 charPosition = lookupCharPosition(overlay[y + row][x + column].c);
+
+				// loop through screen pixels and draw the appropriate pixel from the bitmap font texture
+				for (var charX = 0; charX < charWidth; charX++)
+				{
+					for (var charY = 0; charY < charHeight; charY++)
+					{
+						var bitmapFontColor = bitmapFont.GetPixel((int)charPosition.x * charWidth + charX, bitmapFont.height - ((int)charPosition.y * charHeight + charY));
+						var isCharPixel = bitmapFontColor.r > 0.5f;
+						Color pixelColor;
+						pixelColor = isCharPixel ? overlay[row + y][column + x].foreground : overlay[row + y][column + x].background;
+						overlayTexture.SetPixel(regionX + column * charWidth + charX, (overlayTexture.height - regionY - regionHeight) +
+							(regionHeight - (row * charHeight + charY)), pixelColor);
+					}
+				}
+			}
+		}
+
+		//update the region texture
+		overlayTexture.Apply();
+
+		//copy the region to the overlay and set the overlay in the shader
+		mat.SetTexture("_Overlay", overlayTexture);
+	}
+
 	private void RenderRegion(int x, int y, int width, int height)
 	{
 		//create new texture that is size of screen region
@@ -349,7 +395,17 @@ public class ASCII : MonoBehaviour
 		if (isOverlayDirty)
 		{
 			isOverlayDirty = false;
-			RenderRegion(dirtyPos1.x, dirtyPos1.y, dirtyPos2.x - dirtyPos1.x, dirtyPos2.y - dirtyPos1.y);
+
+			if (SystemInfo.copyTextureSupport == CopyTextureSupport.None)
+			{
+				LegacyRenderRegion(dirtyPos1.x, dirtyPos1.y, dirtyPos2.x - dirtyPos1.x, dirtyPos2.y - dirtyPos1.y);
+			}
+			else
+			{
+				RenderRegion(dirtyPos1.x, dirtyPos1.y, dirtyPos2.x - dirtyPos1.x, dirtyPos2.y - dirtyPos1.y);
+			}
+			
+			
 		}
 
 		if (!pixelate)
