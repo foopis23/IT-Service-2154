@@ -9,6 +9,8 @@ public class ASCII : MonoBehaviour
 	public static ASCII Instance { private set; get; }
 	public enum ColorMode { ORIGINAL, DECIMATED, ONE_BIT, OVERLAY_ONLY }
 
+	public bool useLegacyRendering = false;
+
 	private Material mat;
 	private int charWidth, charHeight;
 	private char[][] mappedChars;
@@ -396,7 +398,7 @@ public class ASCII : MonoBehaviour
 		{
 			isOverlayDirty = false;
 
-			if (SystemInfo.copyTextureSupport == CopyTextureSupport.None)
+			if (SystemInfo.copyTextureSupport == CopyTextureSupport.None || useLegacyRendering)
 			{
 				LegacyRenderRegion(dirtyPos1.x, dirtyPos1.y, dirtyPos2.x - dirtyPos1.x, dirtyPos2.y - dirtyPos1.y);
 			}
@@ -404,8 +406,6 @@ public class ASCII : MonoBehaviour
 			{
 				RenderRegion(dirtyPos1.x, dirtyPos1.y, dirtyPos2.x - dirtyPos1.x, dirtyPos2.y - dirtyPos1.y);
 			}
-			
-			
 		}
 
 		if (!pixelate)
