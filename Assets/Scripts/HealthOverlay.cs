@@ -112,9 +112,9 @@ public class HealthOverlay : MonoBehaviour
 			{
 				ASCII.Instance.ClearArea(compassX, compassY, 3, 3);
 				ASCII.Instance.DrawBox('#', Color.white, Color.black, compassX - 1, compassY - 1, 5, 5);
-				ASCII.Instance.PutChar('-', Color.red, compassX + 1, compassY);
+				ASCII.Instance.PutChar('|', Color.red, compassX + 1, compassY);
 				ASCII.Instance.PutChar('0', Color.white, compassX + 1, compassY + 1);
-				ASCII.Instance.PutChar('-', Color.white, compassX + 1, compassY + 2);
+				ASCII.Instance.PutChar('|', Color.white, compassX + 1, compassY + 2);
 			}
 		}
 		else if (angle > 22.5 && angle <= 67.5)
@@ -160,9 +160,9 @@ public class HealthOverlay : MonoBehaviour
 			{
 				ASCII.Instance.ClearArea(compassX, compassY, 3, 3);
 				ASCII.Instance.DrawBox('#', Color.white, Color.black, compassX - 1, compassY - 1, 5, 5);
-				ASCII.Instance.PutChar('-', Color.white, compassX + 1, compassY);
+				ASCII.Instance.PutChar('|', Color.white, compassX + 1, compassY);
 				ASCII.Instance.PutChar('0', Color.white, compassX + 1, compassY + 1);
-				ASCII.Instance.PutChar('-', Color.red, compassX + 1, compassY + 2);
+				ASCII.Instance.PutChar('|', Color.red, compassX + 1, compassY + 2);
 			}
 		}
 		else if (angle > -67.5 && angle <= -22.5)
