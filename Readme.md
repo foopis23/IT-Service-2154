@@ -52,4 +52,4 @@ But that doesn't really matter. You're an IT guy with a desk-full of customer co
 
 Unity Version: 2020.2.6f1<br>
 Store Page: [https://foopis23.itch.io/it-service](https://foopis23.itch.io/it-service)<br>
-Changelog: [Changlog.md](Changlog.md)
+Changelog: [Changelog.md](Changelog.md)
