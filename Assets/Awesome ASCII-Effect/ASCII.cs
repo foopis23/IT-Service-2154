@@ -22,6 +22,11 @@ public class ASCII : MonoBehaviour
 	private OverlayChar[][] overlay;
 	private Texture2D overlayTexture;
 	private RenderTexture overlayRT;
+	
+	public int largeScreenHeight;
+	public int mediumScreenHeight;
+	public int smallScreenHeight;
+	public int extraSmallScreenHeight;
 
 	public bool pixelate = true;
 	[Range(0, 1)]
@@ -47,6 +52,27 @@ public class ASCII : MonoBehaviour
 
 	private void Setup()
 	{
+		if (Screen.height >= 1080)
+		{
+			rows = (uint) largeScreenHeight;
+			columns = (uint) (largeScreenHeight * Screen.width / Screen.height);
+		}
+		else if (Screen.height >= 720)
+		{
+			rows = (uint) mediumScreenHeight;
+			columns = (uint) (mediumScreenHeight * Screen.width / Screen.height);
+		}
+		else if (Screen.height >= 600)
+		{
+			rows = (uint) smallScreenHeight;
+			columns = (uint) (smallScreenHeight * Screen.width / Screen.height);
+		}
+		else
+		{
+			rows = (uint) extraSmallScreenHeight;
+			columns = (uint) (extraSmallScreenHeight * Screen.width / Screen.height);
+		}
+		
 		mat = new Material(Shader.Find("Hidden/ASCII"));
 		dirtyPos1 = new Vector2Int();
 		dirtyPos2 = new Vector2Int();

@@ -648,11 +648,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: rows
-      value: 80
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: columns
-      value: 140
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: pixelate
@@ -667,8 +667,48 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: largeScreenHeight
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: largeScreenSize.x
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: largeScreenSize.y
+      value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: smallScreenHeight
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: smallScreenSize.x
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: smallScreenSize.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: mediumScreenHeight
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: mediumScreenSize.x
+      value: 105
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: mediumScreenSize.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: useLegacyRendering
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3317125340279824244, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
+      propertyPath: extraSmallScreenHeight
+      value: 48
       objectReference: {fileID: 0}
     - target: {fileID: 4543459960021953385, guid: bb37224e27ae9c04eb0eda2cb53aa849, type: 3}
       propertyPath: m_Layer
