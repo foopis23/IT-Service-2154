@@ -20,28 +20,28 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
+      value: {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/GunPart1
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
+      value: {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Right Arm
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
+      value: {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Left Arm
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 21d2dbe06af600e4b92f9ec69ce5cf79, type: 2}
+      value: {fileID: 2100000, guid: 3c7fe7f725c2b9c49aa635d49cfb913c, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Body
     classID: 23
@@ -82,10 +82,10 @@ AnimationClip:
       customType: 21
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
-    - {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
-    - {fileID: 2100000, guid: 8adaa33bf2eaa4d0ba88fccb3e142a7d, type: 2}
-    - {fileID: 2100000, guid: 21d2dbe06af600e4b92f9ec69ce5cf79, type: 2}
+    - {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
+    - {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
+    - {fileID: 2100000, guid: 1357c0199282b6c449602da3930f51fc, type: 2}
+    - {fileID: 2100000, guid: 3c7fe7f725c2b9c49aa635d49cfb913c, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

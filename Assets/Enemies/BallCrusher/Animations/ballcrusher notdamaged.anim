@@ -20,21 +20,21 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
+      value: {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Body
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
+      value: {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Left Arm
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
+      value: {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
     attribute: m_Materials.Array.data[0]
     path: Mesh Wrapper/Right Arm
     classID: 23
@@ -68,9 +68,9 @@ AnimationClip:
       customType: 21
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
-    - {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
-    - {fileID: 2100000, guid: c6c569f29ae722b43946d320cf2e89d8, type: 2}
+    - {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
+    - {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
+    - {fileID: 2100000, guid: fe01773b51f9642409531c342f3856af, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
